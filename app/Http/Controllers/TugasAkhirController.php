@@ -8,22 +8,41 @@ use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class TugasAkhirController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        if ($user->role === 'admin') {
-            $tugasAkhirs = TugasAkhir::with(['mahasiswa.user', 'dosen.user'])->get();
-        } elseif ($user->role === 'dosen') {
-            $tugasAkhirs = TugasAkhir::with(['mahasiswa.user', 'dosen.user'])
-                ->where('dosen_id', $user->dosen->id)
-                ->get();
-        } else {
-            $tugasAkhirs = TugasAkhir::with(['mahasiswa.user', 'dosen.user'])
-                ->where('mahasiswa_id', $user->mahasiswa->id)
-                ->get();
+        $tugasAkhirs = collect([]);
+
+        try {
+            if ($user->role === 'admin') {
+                $tugasAkhirs = TugasAkhir::with(['mahasiswa.user', 'dosen.user'])->get();
+            } elseif ($user->role === 'dosen') {
+                $tugasAkhirs = TugasAkhir::with(['mahasiswa.user', 'dosen.user'])
+                    ->where('dosen_id', $user->dosen->id)
+                    ->get();
+            } else {
+                $mahasiswa = $user->mahasiswa;
+                if ($mahasiswa) {
+                    $tugasAkhirs = TugasAkhir::with(['mahasiswa.user', 'dosen.user'])
+                        ->where('mahasiswa_id', $mahasiswa->id)
+                        ->get();
+                }
+            }
+
+            Log::info('Tugas Akhir index loaded', [
+                'user_id' => $user->id,
+                'user_nama' => $user->nama,
+                'role' => $user->role,
+                'mahasiswa_id' => $user->mahasiswa ? $user->mahasiswa->id : null,
+                'tugas_akhirs_count' => $tugasAkhirs->count(),
+                'tugas_akhirs' => $tugasAkhirs->toArray(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error loading Tugas Akhir index: ' . $e->getMessage(), ['exception' => $e]);
         }
 
         return view('tugas-akhir.index', compact('tugasAkhirs'));
@@ -65,13 +84,26 @@ class TugasAkhirController extends Controller
             $filePath = $request->file('file')->store('tugas-akhir', 'public');
         }
 
-        TugasAkhir::create([
-            'mahasiswa_id' => Auth::user()->mahasiswa->id,
+        $mahasiswa = Auth::user()->mahasiswa;
+        if (!$mahasiswa) {
+            Log::error('Mahasiswa record not found for user', ['user_id' => Auth::id()]);
+            return redirect()->route('tugas-akhir.create')->with('error', 'Data mahasiswa tidak ditemukan.');
+        }
+
+        $tugasAkhir = TugasAkhir::create([
+            'mahasiswa_id' => $mahasiswa->id,
             'dosen_id' => $validated['dosen_id'],
             'judul' => $validated['judul'],
             'deskripsi' => $validated['deskripsi'],
             'file_path' => $filePath,
             'status' => 'pending',
+        ]);
+
+        Log::info('Tugas Akhir created', [
+            'tugas_akhir_id' => $tugasAkhir->id,
+            'mahasiswa_id' => $mahasiswa->id,
+            'user_id' => Auth::id(),
+            'judul' => $validated['judul'],
         ]);
 
         return redirect()->route('tugas-akhir.index')->with('success', 'Tugas akhir berhasil diajukan.');
@@ -154,21 +186,19 @@ class TugasAkhirController extends Controller
         return redirect()->route('tugas-akhir.index')->with('success', 'Tugas akhir berhasil dihapus.');
     }
 
-        public function approve(Request $request, TugasAkhir $tugasAkhir)
+    public function approve(Request $request, TugasAkhir $tugasAkhir)
     {
         if (Auth::user()->role !== 'dosen') {
             abort(403, 'Hanya dosen yang dapat menyetujui tugas akhir.');
         }
 
-        // Validasi, catatan bersifat opsional
         $validated = $request->validate([
-            'catatan' => 'nullable|string', // Catatan boleh kosong
+            'catatan' => 'nullable|string',
         ]);
 
-        // Update tugas akhir
         $tugasAkhir->update([
             'status' => 'approved',
-            'catatan' => $validated['catatan'] ?? $tugasAkhir->catatan, // Gunakan catatan lama jika tidak ada input baru
+            'catatan' => $validated['catatan'] ?? $tugasAkhir->catatan,
         ]);
 
         return redirect()->route('tugas-akhir.index')->with('success', 'Tugas akhir berhasil disetujui.');

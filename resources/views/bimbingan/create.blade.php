@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 
 @section('title', 'Tambah Bimbingan')
 
@@ -25,22 +25,35 @@
                 @csrf
                 <div class="form-group">
                     <label for="tugas_akhir_id">Tugas Akhir</label>
-                    <select name="tugas_akhir_id" id="tugas_akhir_id" class="form-control select2" required>
+                    <select name="tugas_akhir_id" id="tugas_akhir_id" class="form-control select2 @error('tugas_akhir_id') is-invalid @enderror" required>
                         <option value="">Pilih Tugas Akhir</option>
-                        @foreach ($tugasAkhirs as $tugasAkhir)
-                            <option value="{{ $tugasAkhir->id }}" {{ old('tugas_akhir_id') == $tugasAkhir->id ? 'selected' : '' }}>
-                                {{ $tugasAkhir->judul }} ({{ $tugasAkhir->mahasiswa->user->nama }})
-                            </option>
-                        @endforeach
+                        @if ($tugasAkhirs->count() > 0)
+                            @foreach ($tugasAkhirs as $tugasAkhir)
+                                <option value="{{ $tugasAkhir->id }}" {{ old('tugas_akhir_id') == $tugasAkhir->id ? 'selected' : '' }}>
+                                    {{ $tugasAkhir->judul }} ({{ $tugasAkhir->mahasiswa->user->nama ?? 'Tidak ada nama' }})
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="" disabled>Tidak ada tugas akhir tersedia</option>
+                        @endif
                     </select>
+                    @error('tugas_akhir_id')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="catatan">Catatan</label>
-                    <textarea name="catatan" id="catatan" class="form-control" rows="5" required>{{ old('catatan') }}</textarea>
+                    <textarea name="catatan" id="catatan" class="form-control @error('catatan') is-invalid @enderror" rows="5" required>{{ old('catatan') }}</textarea>
+                    @error('catatan')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="tanggal">Tanggal</label>
-                    <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ old('tanggal') }}" required>
+                    <input type="date" name="tanggal" id="tanggal" class="form-control @error('tanggal') is-invalid @enderror" value="{{ old('tanggal') }}" required>
+                    @error('tanggal')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Simpan</button>
                 <a href="{{ route('bimbingan.index') }}" class="btn btn-secondary">Batal</a>
@@ -52,7 +65,10 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('.select2').select2();
+            $('.select2').select2({
+                placeholder: "Pilih Tugas Akhir",
+                allowClear: true
+            });
         });
     </script>
 @stop

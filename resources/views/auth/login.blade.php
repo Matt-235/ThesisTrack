@@ -1,67 +1,127 @@
-@extends('adminlte::auth.login')
+@extends('layouts.auth')
 
-@section('auth_header', __('Log in to your account'))
+@section('title', 'Login')
 
-@section('auth_body')
-    @if (session('status'))
-        <div class="alert alert-success" role="alert">
-            {{ session('status') }}
-        </div>
-    @endif
+@section('content')
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-6 col-lg-5">
+            <div class="card p-4 position-relative">
+                <!-- Tombol Silang -->
+                <a href="/" class="position-absolute top-0 end-0 m-3 text-dark text-decoration-none" title="Kembali ke Beranda">
+                    <i class="fas fa-times fa-lg"></i>
+                </a>
+                
+                <h3 class="text-center mb-4">Login</h3>
+                
+                <!-- Session Status -->
+                @if (session('status'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('status') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+                <!-- Session Error -->
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
 
-        <!-- Email Address -->
-        <div class="input-group mb-3">
-            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" value="{{ old('email') }}" required autofocus>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-envelope"></span>
-                </div>
+                <form method="POST" action="{{ route('login') }}" id="login-form">
+                    @csrf
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autofocus placeholder="Email">
+                        <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-floating mb-3 position-relative">
+                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required placeholder="Password">
+                        <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+                        <span class="position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" style="cursor: pointer;">
+                            <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                        </span>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="remember">Remember Me</label>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary py-2">Login</button>
+                    </div>
+
+                    <!-- Forgot Password and Register Links -->
+                    <div class="text-center">
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}" class="text-decoration-none d-block mb-2">Forgot Your Password?</a>
+                        @endif
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="text-decoration-none">Don't have an account? Register</a>
+                        @endif
+                    </div>
+                </form>
             </div>
-            @error('email')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
         </div>
+    </div>
+</div>
+@endsection
 
-        <!-- Password -->
-        <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
-                </div>
-            </div>
-            @error('password')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
+@section('js')
+    <script>
+        $(document).ready(function () {
+            // Debugging form submission
+            $('#login-form').on('submit', function (e) {
+                const formData = new FormData(this);
+                console.log('Login form submitted with data:', Object.fromEntries(formData));
+            });
 
-        <!-- Remember Me and Submit Button -->
-        <div class="row mb-3">
-            <div class="col-8">
-                <div class="icheck-primary">
-                    <input type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <label for="remember">
-                        {{ __('Remember Me') }}
-                    </label>
-                </div>
-            </div>
-            <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block">{{ __('Login') }}</button>
-            </div>
-        </div>
+            // Toggle password visibility
+            $('.toggle-password').on('click', function () {
+                const passwordField = $('#password');
+                const toggleIcon = $('#togglePasswordIcon');
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                    toggleIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordField.attr('type', 'password');
+                    toggleIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
 
-        <!-- Forgot Password Link -->
-        @if (Route::has('password.request'))
-            <p class="mb-1">
-                <a href="{{ route('password.request') }}">{{ __('Forgot Your Password?') }}</a>
-            </p>
-        @endif
-    </form>
-@stop
+            // Tampilkan pesan error dari session
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: '{!! session('error') !!}',
+                    confirmButtonText: 'OK'
+                });
+            @endif
+
+            // Tampilkan pesan sukses dari session
+            @if (session('status'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: '{!! session('status') !!}',
+                    confirmButtonText: 'OK'
+                });
+            @endif
+        });
+    </script>
+@endsection

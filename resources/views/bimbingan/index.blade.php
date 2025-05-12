@@ -23,17 +23,6 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label for="filter_mahasiswa">Filter Mahasiswa</label>
-                    <select id="filter_mahasiswa" class="form-control select2">
-                        <option value="" selected>Semua Mahasiswa</option>
-                        @foreach ($bimbingans->pluck('tugasAkhir.mahasiswa.user.nama', 'tugasAkhir.mahasiswa_id')->unique() as $mahasiswaId => $nama)
-                            <option value="{{ $mahasiswaId }}">{{ $nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
             <table id="bimbinganTable" class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -83,14 +72,6 @@
                 autoWidth: false,
                 buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#bimbinganTable_wrapper .col-md-6:eq(0)');
-
-            // Pastikan filter tidak aktif saat halaman dimuat
-            table.column(2).search('').draw();
-
-            $('#filter_mahasiswa').on('change', function () {
-                var mahasiswaId = $(this).val();
-                table.column(2).search(mahasiswaId ? '^' + mahasiswaId + '$' : '', true, false).draw();
-            });
 
             @if (session('success'))
                 Swal.fire({
