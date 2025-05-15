@@ -12,7 +12,11 @@
                     <i class="fas fa-times fa-lg"></i>
                 </a>
                 
-                <h3 class="text-center mb-4">Login</h3>
+                <!-- Logo -->
+                <div class="d-flex justify-content-center mb-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="Thesistrack Logo" class="img-fluid" style="max-width: 250px; height: auto;">
+                </div>
+                
                 
                 <!-- Session Status -->
                 @if (session('status'))
@@ -68,10 +72,10 @@
                     <!-- Forgot Password and Register Links -->
                     <div class="text-center">
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-decoration-none d-block mb-2">Forgot Your Password?</a>
+                            <a href="{{ route('password.request') }}" class="btn btn-link text-primary text-decoration-none d-block mb-2">Forgot Your Password?</a>
                         @endif
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="text-decoration-none">Don't have an account? Register</a>
+                            <a href="{{ route('register') }}" class="btn btn-link text-primary text-decoration-none">Don't have an account? Register</a>
                         @endif
                     </div>
                 </form>
@@ -79,6 +83,15 @@
         </div>
     </div>
 </div>
+<style>
+    .btn-link.text-primary:hover {
+        color: #0056b3 !important; /* Warna lebih gelap saat hover */
+        text-decoration: underline !important; /* Garis bawah saat hover */
+    }
+    .card {
+        overflow: hidden; /* Pastikan elemen di dalam card tidak mengganggu tata letak */
+    }
+</style>
 @endsection
 
 @section('js')

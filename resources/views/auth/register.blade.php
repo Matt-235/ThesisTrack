@@ -12,7 +12,7 @@
                     <i class="fas fa-times fa-lg"></i>
                 </a>
                 
-                <h3 class="text-center mb-4">Register</h3>
+                <h3 class="text-center mb-4 custom-title">Daftar Akun</h3>
                 <form method="POST" action="{{ route('register') }}" id="register-form">
                     @csrf
                     <!-- Nama -->
@@ -65,7 +65,7 @@
                     </div>
                     <!-- Password -->
                     <div class="form-floating mb-3 position-relative">
-                        <input  class="form-control @error('password') is-invalid @enderror" id="password" name="password" required placeholder="Password">
+                        <input class="form-control @error('password') is-invalid @enderror" id="password" name="password" required placeholder="Password">
                         <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
                         <span class="position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" style="cursor: pointer;" data-target="password">
                             <i class="fas fa-eye" id="togglePasswordIcon"></i>
@@ -105,6 +105,14 @@
         </div>
     </div>
 </div>
+<style>
+    .custom-title {
+        color: #003087; /* Warna biru tua untuk tema profesional */
+        font-size: 2rem; /* Ukuran font lebih besar */
+        font-weight: 700; /* Tebal untuk kesan kuat */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Bayangan teks untuk efek modern */
+    }
+</style>
 @endsection
 
 @section('js')
