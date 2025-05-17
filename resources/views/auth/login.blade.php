@@ -17,7 +17,6 @@
                     <img src="{{ asset('images/logo.png') }}" alt="Thesistrack Logo" class="img-fluid" style="max-width: 250px; height: auto;">
                 </div>
                 
-                
                 <!-- Session Status -->
                 @if (session('status'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -37,11 +36,11 @@
                 <form method="POST" action="{{ route('login') }}" id="login-form">
                     @csrf
 
-                    <!-- Email -->
+                    <!-- Identifier (NIM/NIP/Email) -->
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autofocus placeholder="Email">
-                        <label for="email"><i class="fas fa-envelope me-2"></i>Email</label>
-                        @error('email')
+                        <input type="text" class="form-control @error('identifier') is-invalid @enderror" id="identifier" name="identifier" value="{{ old('identifier') }}" required autofocus placeholder="NIM/NIP atau Email">
+                        <label for="identifier"><i class="fas fa-user me-2"></i>NIM/NIP atau Email</label>
+                        @error('identifier')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

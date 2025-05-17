@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TugasAkhir extends Model
 {
+    use HasFactory;
+
     protected $table = 'tugas_akhirs';
     protected $fillable = [
         'mahasiswa_id',
@@ -17,14 +19,17 @@ class TugasAkhir extends Model
         'status',
         'catatan',
     ];
+
     public function mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
     }
+
     public function dosen()
     {
         return $this->belongsTo(Dosen::class, 'dosen_id');
     }
+
     public function bimbingans()
     {
         return $this->hasMany(Bimbingan::class, 'tugas_akhir_id');

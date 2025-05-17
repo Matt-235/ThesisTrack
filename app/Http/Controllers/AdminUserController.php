@@ -43,7 +43,7 @@ class AdminUserController extends Controller
                 'angkatan' => $validated['angkatan'],
             ]);
 
-            return redirect()->route('admin.mahasiswa.index')->with('success', 'Mahasiswa berhasil ditambahkan.');
+            return redirect()->route('admin.dashboard')->with('success', 'Mahasiswa berhasil ditambahkan.');
         });
     }
 
@@ -80,7 +80,7 @@ class AdminUserController extends Controller
                 'angkatan' => $validated['angkatan'],
             ]);
 
-            return redirect()->route('admin.mahasiswa.index')->with('success', 'Mahasiswa berhasil diperbarui.');
+            return redirect()->route('admin.dashboard')->with('success', 'Mahasiswa berhasil diperbarui.');
         });
     }
 
@@ -88,20 +88,20 @@ class AdminUserController extends Controller
     {
         return DB::transaction(function () use ($mahasiswa) {
             if ($mahasiswa->tugasAkhirs()->count() > 0) {
-                return redirect()->route('admin.mahasiswa.index')->with('error', 'Mahasiswa tidak dapat dihapus karena memiliki tugas akhir.');
+                return redirect()->route('admin.dashboard')->with('error', 'Mahasiswa tidak dapat dihapus karena memiliki tugas akhir.');
             }
 
             $mahasiswa->user->delete();
             $mahasiswa->delete();
 
-            return redirect()->route('admin.mahasiswa.index')->with('success', 'Mahasiswa berhasil dihapus.');
+            return redirect()->route('admin.dashboard')->with('success', 'Mahasiswa berhasil dihapus.');
         });
     }
 
     // Dosen
     public function dosenIndex()
     {
-        return redirect()->route('admin.mahasiswa.index'); // Dashboard sama untuk mahasiswa dan dosen
+        return redirect()->route('admin.dashboard');
     }
 
     public function dosenStore(Request $request)
@@ -128,7 +128,7 @@ class AdminUserController extends Controller
                 'bidang_keahlian' => $validated['bidang_keahlian'],
             ]);
 
-            return redirect()->route('admin.mahasiswa.index')->with('success', 'Dosen berhasil ditambahkan.');
+            return redirect()->route('admin.dashboard')->with('success', 'Dosen berhasil ditambahkan.');
         });
     }
 
@@ -165,7 +165,7 @@ class AdminUserController extends Controller
                 'bidang_keahlian' => $validated['bidang_keahlian'],
             ]);
 
-            return redirect()->route('admin.mahasiswa.index')->with('success', 'Dosen berhasil diperbarui.');
+            return redirect()->route('admin.dashboard')->with('success', 'Dosen berhasil diperbarui.');
         });
     }
 
@@ -173,13 +173,13 @@ class AdminUserController extends Controller
     {
         return DB::transaction(function () use ($dosen) {
             if ($dosen->tugasAkhirs()->count() > 0) {
-                return redirect()->route('admin.mahasiswa.index')->with('error', 'Dosen tidak dapat dihapus karena memiliki tugas akhir.');
+                return redirect()->route('admin.dashboard')->with('error', 'Dosen tidak dapat dihapus karena memiliki tugas akhir.');
             }
 
             $dosen->user->delete();
             $dosen->delete();
 
-            return redirect()->route('admin.mahasiswa.index')->with('success', 'Dosen berhasil dihapus.');
+            return redirect()->route('admin.dashboard')->with('success', 'Dosen berhasil dihapus.');
         });
     }
 }
