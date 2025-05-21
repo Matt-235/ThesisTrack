@@ -1,8 +1,7 @@
 # ThesisTrack 🎓  
 Aplikasi Manajemen Tugas Akhir Berbasis Laravel 11
 
-## 📸 Tampilan Dashboard  
-![Dashboard ThesisTrack](path/to/dashboard-image.png) <!-- Ganti dengan path gambar -->
+https://github.com/user-attachments/assets/c968dc9d-2459-4d12-9970-55c1f1d45c04
 
 ## 🧑‍💻 Informasi Pengembang
 - **Nama**: A. Rahmat Rafgali Raja  
