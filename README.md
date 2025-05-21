@@ -1,66 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ThesisTrack 🎓  
+Aplikasi Manajemen Tugas Akhir Berbasis Laravel 11
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📸 Tampilan Dashboard  
+![Dashboard ThesisTrack](path/to/dashboard-image.png) <!-- Ganti dengan path gambar -->
 
-## About Laravel
+## 🧑‍💻 Informasi Pengembang
+- **Nama**: A. Rahmat Rafgali Raja  
+- **NIM**: D02235233  
+- **Mata Kuliah**: Framework Web Based  
+- **Tahun**: 2025  
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📝 Deskripsi  
+**ThesisTrack** adalah aplikasi web berbasis Laravel 11 yang dirancang untuk memudahkan proses manajemen tugas akhir di lingkungan akademik. Aplikasi ini mendukung interaksi dan koordinasi antara **mahasiswa**, **dosen**, dan **admin** dalam pengelolaan tugas akhir.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 👥 Role dan Fitur
 
-## Learning Laravel
+### 🧑 Mahasiswa
+- Mengelola tugas akhir (pengajuan, revisi, unggah dokumen)
+- Melihat status persetujuan tugas akhir
+- Mengakses catatan bimbingan dari dosen
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 👨‍🏫 Dosen
+- Menyetujui atau menolak tugas akhir
+- Memberikan catatan bimbingan
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🛠️ Admin
+- Mengelola data pengguna (mahasiswa dan dosen)
+- Memantau status tugas akhir secara keseluruhan
+- Mengatur hak akses dan peran pengguna
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🚀 Fitur Utama
+- Dashboard interaktif (Bootstrap 5, Tailwind CSS, AdminLTE)
+- Sistem bimbingan online
+- Persetujuan tugas akhir dengan catatan dosen
+- Sistem login dan logout terintegrasi
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🗄️ Struktur Tabel Database
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Tabel: `users`
+| Nama Field       | Tipe Data     | Keterangan                            |
+|------------------|---------------|----------------------------------------|
+| id               | bigint        | Primary key, auto increment            |
+| nama             | varchar(255)  | Nama pengguna                          |
+| email            | varchar(255)  | Email pengguna, unik                   |
+| password         | varchar(255)  | Password pengguna (hashed)            |
+| role             | enum          | admin, dosen, mahasiswa                |
+| remember_token   | varchar(100)  | Token untuk fitur remember me         |
+| created_at       | timestamp     | Timestamp pembuatan data              |
+| updated_at       | timestamp     | Timestamp pembaruan data              |
 
-## Contributing
+### Tabel: `mahasiswa`
+| Nama Field  | Tipe Data     | Keterangan                                      |
+|-------------|---------------|--------------------------------------------------|
+| id          | bigint        | Primary key, auto increment                     |
+| user_id     | bigint        | Foreign key ke `users`, on delete cascade       |
+| nim         | varchar(255)  | Nomor Induk Mahasiswa, unik                     |
+| angkatan    | varchar(255)  | Tahun angkatan mahasiswa                        |
+| created_at  | timestamp     | Timestamp pembuatan data                        |
+| updated_at  | timestamp     | Timestamp pembaruan data                        |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Tabel: `dosen`
+| Nama Field      | Tipe Data     | Keterangan                                    |
+|------------------|---------------|-----------------------------------------------|
+| id               | bigint        | Primary key, auto increment                   |
+| user_id          | bigint        | Foreign key ke `users`, on delete cascade     |
+| nip              | varchar(255)  | Nomor Induk Pegawai, unik                     |
+| bidang_keahlian  | varchar(255)  | Bidang keahlian dosen                         |
+| created_at       | timestamp     | Timestamp pembuatan data                      |
+| updated_at       | timestamp     | Timestamp pembaruan data                      |
 
-## Code of Conduct
+### Tabel: `tugas_akhirs`
+| Nama Field     | Tipe Data     | Keterangan                                                  |
+|----------------|---------------|--------------------------------------------------------------|
+| id             | bigint        | Primary key, auto increment                                 |
+| mahasiswa_id   | bigint        | FK ke `mahasiswa`, on delete cascade                        |
+| dosen_id       | bigint        | FK ke `dosen`, nullable, on delete set null                 |
+| judul          | varchar(255)  | Judul tugas akhir                                           |
+| deskripsi      | text          | Deskripsi tugas akhir                                       |
+| file_path      | varchar(255)  | Path file tugas akhir, nullable                             |
+| status         | enum          | Status: pending, approved, rejected. Default: pending       |
+| catatan        | text          | Catatan dari dosen, nullable                                |
+| created_at     | timestamp     | Timestamp pembuatan data                                    |
+| updated_at     | timestamp     | Timestamp pembaruan data                                    |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Tabel: `bimbingan`
+| Nama Field       | Tipe Data     | Keterangan                                      |
+|------------------|---------------|--------------------------------------------------|
+| id               | bigint        | Primary key, auto increment                     |
+| tugas_akhir_id   | bigint        | FK ke `tugas_akhirs`, on delete cascade         |
+| catatan          | text          | Catatan bimbingan dari dosen                    |
+| tanggal          | date          | Tanggal sesi bimbingan                          |
+| created_at       | timestamp     | Timestamp pembuatan data                        |
+| updated_at       | timestamp     | Timestamp pembaruan data                        |
 
-## Security Vulnerabilities
+### Tabel: `password_reset_tokens`
+| Nama Field  | Tipe Data     | Keterangan                              |
+|-------------|---------------|------------------------------------------|
+| email       | varchar(255)  | Primary key, email pengguna              |
+| token       | varchar(255)  | Token untuk reset password               |
+| created_at  | timestamp     | Timestamp pembuatan token (nullable)     |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🔗 Relasi Antar Tabel
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### One-to-One
+- `users` ➝ `mahasiswa`: satu pengguna hanya bisa menjadi satu mahasiswa
+- `users` ➝ `dosen`: satu pengguna hanya bisa menjadi satu dosen
+
+### One-to-Many
+- `mahasiswa` ➝ `tugas_akhirs`: satu mahasiswa bisa punya banyak tugas akhir
+- `dosen` ➝ `tugas_akhirs`: satu dosen bisa membimbing banyak tugas akhir
+- `tugas_akhirs` ➝ `bimbingan`: satu tugas akhir memiliki banyak catatan bimbingan
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+- Laravel 11
+- Laravel Breeze
+- Bootstrap 5
+- Tailwind CSS
+- AdminLTE
+- MySQL
+
+---
