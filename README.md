@@ -1,7 +1,7 @@
 # ThesisTrack 🎓  
 Aplikasi Manajemen Tugas Akhir Berbasis Laravel 11
 
-(https://github.com/user-attachments/assets/c968dc9d-2459-4d12-9970-55c1f1d45c04)
+![Tampilan Dashboard ThesisTrack](https://github.com/user-attachments/assets/c968dc9d-2459-4d12-9970-55c1f1d45c04)
 
 ## 🧑‍💻 Informasi Pengembang
 - **Nama**: A. Rahmat Rafgali Raja  
@@ -48,11 +48,11 @@ Aplikasi Manajemen Tugas Akhir Berbasis Laravel 11
 | id               | bigint        | Primary key, auto increment            |
 | nama             | varchar(255)  | Nama pengguna                          |
 | email            | varchar(255)  | Email pengguna, unik                   |
-| password         | varchar(255)  | Password pengguna (hashed)            |
+| password         | varchar(255)  | Password pengguna (hashed)             |
 | role             | enum          | admin, dosen, mahasiswa                |
-| remember_token   | varchar(100)  | Token untuk fitur remember me         |
-| created_at       | timestamp     | Timestamp pembuatan data              |
-| updated_at       | timestamp     | Timestamp pembaruan data              |
+| remember_token   | varchar(100)  | Token untuk fitur remember me          |
+| created_at       | timestamp     | Timestamp pembuatan data               |
+| updated_at       | timestamp     | Timestamp pembaruan data               |
 
 ### Tabel: `mahasiswa`
 | Nama Field  | Tipe Data     | Keterangan                                      |
@@ -127,5 +127,3 @@ Aplikasi Manajemen Tugas Akhir Berbasis Laravel 11
 - Tailwind CSS
 - AdminLTE
 - MySQL
-
----
