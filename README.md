@@ -1,7 +1,7 @@
 # ThesisTrack 🎓  
 Aplikasi Manajemen Tugas Akhir Berbasis Laravel 11
 
-https://github.com/user-attachments/assets/c968dc9d-2459-4d12-9970-55c1f1d45c04
+(https://github.com/user-attachments/assets/c968dc9d-2459-4d12-9970-55c1f1d45c04)
 
 ## 🧑‍💻 Informasi Pengembang
 - **Nama**: A. Rahmat Rafgali Raja  
