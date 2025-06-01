@@ -13,42 +13,56 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // Admin
-        $admin = User::create([
+        User::create([
             'nama' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
         ]);
 
-        // Dosen
-        $dosen = User::create([
-            'nama' => 'Dosen User',
-            'email' => 'dosen@example.com',
+        // Dosen 1
+        $dosen1 = User::create([
+            'nama' => 'Dosen Satu',
+            'email' => 'dosen1@example.com',
             'password' => Hash::make('password'),
             'role' => 'dosen',
         ]);
 
         Dosen::create([
-            'user_id' => $dosen->id,
-            'nip' => '1234567890123456',
-            'bidang_keahlian' => 'Sistem Informasi',
+            'user_id' => $dosen1->id,
+            'nip' => '1111111111111111',
+            'bidang_keahlian' => 'Rekayasa Perangkat Lunak',
         ]);
 
-        // Mahasiswa
-        $mahasiswa = User::create([
-            'nama' => 'Mahasiswa User',
-            'email' => 'mahasiswa@example.com',
+        // Dosen 2
+        $dosen2 = User::create([
+            'nama' => 'Dosen Dua',
+            'email' => 'dosen2@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'dosen',
+        ]);
+
+        Dosen::create([
+            'user_id' => $dosen2->id,
+            'nip' => '2222222222222222',
+            'bidang_keahlian' => 'Kecerdasan Buatan',
+        ]);
+
+        // Mahasiswa 1
+        $mahasiswa1 = User::create([
+            'nama' => 'Mahasiswa Satu',
+            'email' => 'mahasiswa1@example.com',
             'password' => Hash::make('password'),
             'role' => 'mahasiswa',
         ]);
 
         Mahasiswa::create([
-            'user_id' => $mahasiswa->id,
-            'nim' => '1234567890',
+            'user_id' => $mahasiswa1->id,
+            'nim' => '2020000001',
             'angkatan' => '2020',
         ]);
 
-        // Mahasiswa tambahan
+        // Mahasiswa 2
         $mahasiswa2 = User::create([
             'nama' => 'Mahasiswa Dua',
             'email' => 'mahasiswa2@example.com',
@@ -58,7 +72,7 @@ class DatabaseSeeder extends Seeder
 
         Mahasiswa::create([
             'user_id' => $mahasiswa2->id,
-            'nim' => '0987654321',
+            'nim' => '2021000002',
             'angkatan' => '2021',
         ]);
     }

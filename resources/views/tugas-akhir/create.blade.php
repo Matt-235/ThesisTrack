@@ -21,40 +21,60 @@
                     </ul>
                 </div>
             @endif
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <form action="{{ route('tugas-akhir.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+
                 <div class="form-group">
                     <label for="judul">Judul</label>
                     <input type="text" name="judul" id="judul" class="form-control" value="{{ old('judul') }}" required>
                 </div>
+
                 <div class="form-group">
                     <label for="deskripsi">Deskripsi</label>
                     <textarea name="deskripsi" id="deskripsi" class="form-control" rows="5" required>{{ old('deskripsi') }}</textarea>
                 </div>
+
                 <div class="form-group">
-                    <label for="dosen_id">Dosen Pembimbing</label>
-                    <select name="dosen_id" id="dosen_id" class="form-control select2" required>
-                        <option value="">Pilih Dosen</option>
+                    <label>Dosen Pembimbing</label>
+                    <div>
                         @foreach ($dosens as $dosen)
-                            <option value="{{ $dosen->id }}" {{ old('dosen_id') == $dosen->id ? 'selected' : '' }}>{{ $dosen->user->nama }}</option>
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    name="dosen_ids[]"
+                                    value="{{ $dosen->id }}"
+                                    id="dosen_{{ $dosen->id }}"
+                                    class="form-check-input"
+                                    {{ in_array($dosen->id, old('dosen_ids', [])) ? 'checked' : '' }}
+                                >
+                                <label for="dosen_{{ $dosen->id }}" class="form-check-label">
+                                    {{ $dosen->user->nama }}
+                                </label>
+                            </div>
                         @endforeach
-                    </select>
+                    </div>
+                    <small class="form-text text-muted">Pilih maksimal 2 dosen pembimbing.</small>
                 </div>
+
                 <div class="form-group">
                     <label for="file">File Tugas Akhir (PDF/DOC/DOCX, maks 10MB)</label>
-                    <input type="file" name="file" id="file" class="form-control-file">
+                    <input type="file" name="file" id="file" class="form-control-file" accept=".pdf,.doc,.docx">
                 </div>
+
                 <button type="submit" class="btn btn-primary">Ajukan</button>
                 <a href="{{ route('tugas-akhir.index') }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>
-@stop
-
-@section('js')
-    <script>
-        $(document).ready(function() {
-            $('.select2').select2();
-        });
-    </script>
 @stop

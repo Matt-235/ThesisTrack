@@ -21,6 +21,18 @@
                     </ul>
                 </div>
             @endif
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ session('error') }}
+                </div>
+            @endif
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ session('success') }}
+                </div>
+            @endif
             <form action="{{ route('bimbingan.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
@@ -29,7 +41,9 @@
                         <option value="">Pilih Tugas Akhir</option>
                         @if ($tugasAkhirs->count() > 0)
                             @foreach ($tugasAkhirs as $tugasAkhir)
-                                <option value="{{ $tugasAkhir->id }}" {{ old('tugas_akhir_id') == $tugasAkhir->id ? 'selected' : '' }}>
+                                <option value="{{ $tugasAkhir->id }}"
+                                        data-mahasiswa-id="{{ $tugasAkhir->mahasiswa_id }}"
+                                        {{ old('tugas_akhir_id') == $tugasAkhir->id ? 'selected' : '' }}>
                                     {{ $tugasAkhir->judul }} ({{ $tugasAkhir->mahasiswa->user->nama ?? 'Tidak ada nama' }})
                                 </option>
                             @endforeach
@@ -38,6 +52,15 @@
                         @endif
                     </select>
                     @error('tugas_akhir_id')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="mahasiswa_id">Mahasiswa</label>
+                    <select name="mahasiswa_id" id="mahasiswa_id" class="form-control select2 @error('mahasiswa_id') is-invalid @enderror" required>
+                        <option value="">Pilih Mahasiswa</option>
+                    </select>
+                    @error('mahasiswa_id')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
@@ -66,9 +89,30 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2({
-                placeholder: "Pilih Tugas Akhir",
+                placeholder: function() {
+                    return $(this).data('placeholder') || 'Pilih opsi';
+                },
                 allowClear: true
             });
+
+            $('#tugas_akhir_id').on('change', function() {
+                var tugasAkhirId = $(this).val();
+                var mahasiswaId = $(this).find('option:selected').data('mahasiswa-id');
+
+                $('#mahasiswa_id').empty().append('<option value="">Pilih Mahasiswa</option>');
+
+                if (mahasiswaId) {
+                    var mahasiswaName = $(this).find('option:selected').text().match(/\((.*?)\)/)?.[1] || 'Unknown';
+                    $('#mahasiswa_id').append(`<option value="${mahasiswaId}" selected>${mahasiswaName}</option>`);
+                }
+
+                $('#mahasiswa_id').trigger('change');
+            });
+
+            // Trigger change on page load if tugas_akhir_id has a value
+            if ($('#tugas_akhir_id').val()) {
+                $('#tugas_akhir_id').trigger('change');
+            }
         });
     </script>
 @stop

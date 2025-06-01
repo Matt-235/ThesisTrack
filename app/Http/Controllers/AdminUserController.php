@@ -20,7 +20,8 @@ class AdminUserController extends Controller
     }
 
     public function mahasiswaStore(Request $request)
-    {
+{
+    try {
         return DB::transaction(function () use ($request) {
             $validated = $request->validate([
                 'nama' => 'required|string|max:255',
@@ -45,6 +46,10 @@ class AdminUserController extends Controller
 
             return redirect()->route('admin.dashboard')->with('success', 'Mahasiswa berhasil ditambahkan.');
         });
+    } catch (\Exception $e) {
+        \Log::error('Gagal menambahkan mahasiswa: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Gagal menambahkan mahasiswa. Silakan coba lagi.');
+    }
     }
 
     public function mahasiswaEdit(Mahasiswa $mahasiswa)

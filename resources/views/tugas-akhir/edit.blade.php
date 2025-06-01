@@ -21,6 +21,16 @@
                     </ul>
                 </div>
             @endif
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <form action="{{ route('tugas-akhir.update', $tugasAkhir) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -33,19 +43,20 @@
                     <textarea name="deskripsi" id="deskripsi" class="form-control" rows="5" required>{{ old('deskripsi', $tugasAkhir->deskripsi) }}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="dosen_id">Dosen Pembimbing</label>
-                    <select name="dosen_id" id="dosen_id" class="form-control select2" required>
+                    <label for="dosen_ids">Dosen Pembimbing</label>
+                    <select name="dosen_ids[]" id="dosen_ids" class="form-control select2" multiple="multiple" required>
                         <option value="">Pilih Dosen</option>
                         @foreach ($dosens as $dosen)
-                            <option value="{{ $dosen->id }}" {{ old('dosen_id', $tugasAkhir->dosen_id) == $dosen->id ? 'selected' : '' }}>{{ $dosen->nama }}</option>
+                            <option value="{{ $dosen->id }}" {{ in_array($dosen->id, old('dosen_ids', $tugasAkhir->dosens->pluck('id')->toArray())) ? 'selected' : '' }}>{{ $dosen->user->nama }}</option>
                         @endforeach
                     </select>
+                    <small class="form-text text-muted">Pilih satu atau lebih dosen pembimbing (maksimal 2).</small>
                 </div>
                 <div class="form-group">
                     <label for="file">File Tugas Akhir (PDF/DOC/DOCX, maks 10MB)</label>
-                    <input type="file" name="file" id="file" class="form-control-file">
+                    <input type="file" name="file" id="file" class="form-control-file" accept=".pdf,.doc,.docx">
                     @if ($tugasAkhir->file_path)
-                        <p>File saat ini: <a href="{{ Storage::url($tugasAkhir->file_path) }}" target="_blank">Unduh File</a></p>
+                        <p>File saat ini: <a href="{{ Storage::url($tugasAkhir->file_path) }}" target="_blank">{{ basename($tugasAkhir->file_path) }}</a></p>
                     @endif
                 </div>
                 <button type="submit" class="btn btn-primary">Perbarui</button>
@@ -58,7 +69,10 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('.select2').select2();
+            $('.select2').select2({
+                placeholder: "Pilih Dosen",
+                allowClear: true
+            });
         });
     </script>
 @stop

@@ -12,7 +12,6 @@ class TugasAkhir extends Model
     protected $table = 'tugas_akhirs';
     protected $fillable = [
         'mahasiswa_id',
-        'dosen_id',
         'judul',
         'deskripsi',
         'file_path',
@@ -25,9 +24,10 @@ class TugasAkhir extends Model
         return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
     }
 
-    public function dosen()
+    public function dosens()
     {
-        return $this->belongsTo(Dosen::class, 'dosen_id');
+        return $this->belongsToMany(Dosen::class, 'dosen_tugas_akhir', 'tugas_akhir_id', 'dosen_id')
+                    ->withTimestamps();
     }
 
     public function bimbingans()

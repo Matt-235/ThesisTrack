@@ -31,9 +31,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Dosen::class, 'user_id');
     }
-
-    public function tugasAkhirs()
-{
-    return $this->hasMany(TugasAkhir::class, 'user_id', 'id');
-}
 }

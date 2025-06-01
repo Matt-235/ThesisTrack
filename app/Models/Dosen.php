@@ -24,6 +24,7 @@ class Dosen extends Model
 
     public function tugasAkhirs()
     {
-        return $this->hasMany(TugasAkhir::class, 'dosen_id');
+        return $this->belongsToMany(TugasAkhir::class, 'dosen_tugas_akhir', 'dosen_id', 'tugas_akhir_id')
+                    ->withTimestamps();
     }
 }

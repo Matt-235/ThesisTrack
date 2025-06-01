@@ -1,121 +1,136 @@
-# ThesisTrack 🎓  
-Aplikasi Manajemen Tugas Akhir Berbasis Laravel 11
+# 🎓 ThesisTrack  
+**Aplikasi Manajemen Tugas Akhir Berbasis Laravel 11**
 
-![Gambar](https://github.com/user-attachments/assets/c968dc9d-2459-4d12-9970-55c1f1d45c04)
+![ThesisTrack](https://github.com/user-attachments/assets/c968dc9d-2459-4d12-9970-55c1f1d45c04)
 
-## 🧑‍💻 Informasi Pengembang
+---
+
+## 👨‍💻 Informasi Pengembang
 - **Nama**: A. Rahmat Rafgali Raja  
 - **NIM**: D02235233  
 - **Mata Kuliah**: Framework Web Based  
 - **Tahun**: 2025  
 
+---
+
 ## 📝 Deskripsi  
-**ThesisTrack** adalah aplikasi web berbasis Laravel 11 yang dirancang untuk memudahkan proses manajemen tugas akhir di lingkungan akademik. Aplikasi ini mendukung interaksi dan koordinasi antara **mahasiswa**, **dosen**, dan **admin** dalam pengelolaan tugas akhir.
+**ThesisTrack** adalah aplikasi web berbasis Laravel 11 yang dirancang untuk memudahkan manajemen tugas akhir di lingkungan akademik. Aplikasi ini memungkinkan interaksi antara **mahasiswa**, **dosen**, dan **admin** untuk mengelola proses pengajuan, bimbingan, dan persetujuan tugas akhir.
 
 ---
 
 ## 👥 Role dan Fitur
 
 ### 🧑 Mahasiswa
-- Mengelola tugas akhir (pengajuan, revisi, unggah dokumen)
-- Melihat status persetujuan tugas akhir
-- Mengakses catatan bimbingan dari dosen
+- Mengajukan tugas akhir (judul, deskripsi, dokumen)
+- Melihat status persetujuan
+- Mengakses riwayat dan catatan bimbingan
 
 ### 👨‍🏫 Dosen
-- Menyetujui atau menolak tugas akhir
+- Menyetujui atau menolak pengajuan tugas akhir
 - Memberikan catatan bimbingan
+- Melihat daftar mahasiswa bimbingan
 
 ### 🛠️ Admin
-- Mengelola data pengguna (mahasiswa dan dosen)
-- Memantau status tugas akhir secara keseluruhan
-- Mengatur hak akses dan peran pengguna
+- Mengelola data pengguna (mahasiswa & dosen)
+- Mengatur hak akses dan peran
+- Memantau progres dan status tugas akhir
 
 ---
 
 ## 🚀 Fitur Utama
-- Dashboard interaktif (Bootstrap 5, Tailwind CSS, AdminLTE)
+- Dashboard dinamis menggunakan **Bootstrap 5**, **Tailwind CSS**, dan **AdminLTE**
 - Sistem bimbingan online
-- Persetujuan tugas akhir dengan catatan dosen
-- Sistem login dan logout terintegrasi
+- Persetujuan tugas akhir dengan fitur catatan dosen
+- Sistem login/logout terintegrasi dengan Laravel Auth
 
 ---
 
 ## 🗄️ Struktur Tabel Database
 
 ### Tabel: `users`
-| Nama Field       | Tipe Data     | Keterangan                            |
-|------------------|---------------|----------------------------------------|
-| id               | bigint        | Primary key, auto increment            |
-| nama             | varchar(255)  | Nama pengguna                          |
-| email            | varchar(255)  | Email pengguna, unik                   |
-| password         | varchar(255)  | Password pengguna (hashed)             |
-| role             | enum          | admin, dosen, mahasiswa                |
-| remember_token   | varchar(100)  | Token untuk fitur remember me          |
-| created_at       | timestamp     | Timestamp pembuatan data               |
-| updated_at       | timestamp     | Timestamp pembaruan data               |
+| Field            | Tipe Data     | Keterangan                              |
+|------------------|---------------|------------------------------------------|
+| id               | bigint        | Primary key                              |
+| nama             | varchar(255)  | Nama pengguna                            |
+| email            | varchar(255)  | Email unik                               |
+| password         | varchar(255)  | Password terenkripsi                     |
+| role             | enum          | Peran: admin, dosen, mahasiswa           |
+| remember_token   | varchar(100)  | Token untuk remember me (opsional)       |
+| created_at       | timestamp     | Waktu pembuatan                          |
+| updated_at       | timestamp     | Waktu pembaruan                          |
 
 ### Tabel: `mahasiswa`
-| Nama Field  | Tipe Data     | Keterangan                                      |
-|-------------|---------------|--------------------------------------------------|
-| id          | bigint        | Primary key, auto increment                     |
-| user_id     | bigint        | Foreign key ke `users`, on delete cascade       |
-| nim         | varchar(255)  | Nomor Induk Mahasiswa, unik                     |
-| angkatan    | varchar(255)  | Tahun angkatan mahasiswa                        |
-| created_at  | timestamp     | Timestamp pembuatan data                        |
-| updated_at  | timestamp     | Timestamp pembaruan data                        |
+| Field      | Tipe Data     | Keterangan                            |
+|------------|---------------|----------------------------------------|
+| id         | bigint        | Primary key                            |
+| user_id    | bigint        | FK ke `users`                          |
+| nim        | varchar(255)  | NIM mahasiswa (unik)                   |
+| angkatan   | varchar(255)  | Tahun angkatan                         |
+| created_at | timestamp     | Waktu pembuatan                        |
+| updated_at | timestamp     | Waktu pembaruan                        |
 
 ### Tabel: `dosen`
-| Nama Field      | Tipe Data     | Keterangan                                    |
-|------------------|---------------|-----------------------------------------------|
-| id               | bigint        | Primary key, auto increment                   |
-| user_id          | bigint        | Foreign key ke `users`, on delete cascade     |
-| nip              | varchar(255)  | Nomor Induk Pegawai, unik                     |
-| bidang_keahlian  | varchar(255)  | Bidang keahlian dosen                         |
-| created_at       | timestamp     | Timestamp pembuatan data                      |
-| updated_at       | timestamp     | Timestamp pembaruan data                      |
+| Field            | Tipe Data     | Keterangan                            |
+|------------------|---------------|----------------------------------------|
+| id               | bigint        | Primary key                            |
+| user_id          | bigint        | FK ke `users`                          |
+| nip              | varchar(255)  | NIP dosen (unik)                       |
+| bidang_keahlian  | varchar(255)  | Keahlian bidang studi                  |
+| created_at       | timestamp     | Waktu pembuatan                        |
+| updated_at       | timestamp     | Waktu pembaruan                        |
 
 ### Tabel: `tugas_akhirs`
-| Nama Field     | Tipe Data     | Keterangan                                                  |
-|----------------|---------------|--------------------------------------------------------------|
-| id             | bigint        | Primary key, auto increment                                 |
-| mahasiswa_id   | bigint        | FK ke `mahasiswa`, on delete cascade                        |
-| dosen_id       | bigint        | FK ke `dosen`, nullable, on delete set null                 |
-| judul          | varchar(255)  | Judul tugas akhir                                           |
-| deskripsi      | text          | Deskripsi tugas akhir                                       |
-| file_path      | varchar(255)  | Path file tugas akhir, nullable                             |
-| status         | enum          | Status: pending, approved, rejected. Default: pending       |
-| catatan        | text          | Catatan dari dosen, nullable                                |
-| created_at     | timestamp     | Timestamp pembuatan data                                    |
-| updated_at     | timestamp     | Timestamp pembaruan data                                    |
+| Field          | Tipe Data     | Keterangan                                         |
+|----------------|---------------|----------------------------------------------------|
+| id             | bigint        | Primary key                                        |
+| mahasiswa_id   | bigint        | FK ke `mahasiswa`                                  |
+| judul          | varchar(255)  | Judul tugas akhir                                  |
+| deskripsi      | text          | Deskripsi detail tugas akhir                       |
+| file_path      | varchar(255)  | Lokasi file dokumen (nullable)                     |
+| status         | enum          | pending, approved, rejected (default: pending)     |
+| catatan        | text          | Catatan dari dosen (nullable)                      |
+| created_at     | timestamp     | Waktu pembuatan                                    |
+| updated_at     | timestamp     | Waktu pembaruan                                    |
 
-### Tabel: `bimbingan`
-| Nama Field       | Tipe Data     | Keterangan                                      |
-|------------------|---------------|--------------------------------------------------|
-| id               | bigint        | Primary key, auto increment                     |
-| tugas_akhir_id   | bigint        | FK ke `tugas_akhirs`, on delete cascade         |
-| catatan          | text          | Catatan bimbingan dari dosen                    |
-| tanggal          | date          | Tanggal sesi bimbingan                          |
-| created_at       | timestamp     | Timestamp pembuatan data                        |
-| updated_at       | timestamp     | Timestamp pembaruan data                        |
+### Tabel: `bimbingans`
+| Field           | Tipe Data     | Keterangan                                     |
+|-----------------|---------------|-------------------------------------------------|
+| id              | bigint        | Primary key                                     |
+| tugas_akhir_id  | bigint        | FK ke `tugas_akhirs`                            |
+| mahasiswa_id    | bigint        | FK ke `mahasiswa` (redundan untuk tracking)     |
+| dosen_id        | bigint        | FK ke `dosen` (redundan untuk tracking)         |
+| catatan         | text          | Catatan bimbingan dari dosen                    |
+| tanggal         | date          | Tanggal sesi bimbingan                          |
+| created_at      | timestamp     | Waktu pembuatan                                 |
+| updated_at      | timestamp     | Waktu pembaruan                                 |
+
+### Tabel: `dosen_tugas_akhir` *(Pivot)*
+| Field           | Tipe Data     | Keterangan                                  |
+|-----------------|---------------|----------------------------------------------|
+| dosen_id        | bigint        | FK ke `dosen`                                |
+| tugas_akhir_id  | bigint        | FK ke `tugas_akhirs`                         |
+| created_at      | timestamp     | Timestamp                                    |
+| updated_at      | timestamp     | Timestamp                                    |
 
 ### Tabel: `password_reset_tokens`
-| Nama Field  | Tipe Data     | Keterangan                              |
-|-------------|---------------|------------------------------------------|
-| email       | varchar(255)  | Primary key, email pengguna              |
-| token       | varchar(255)  | Token untuk reset password               |
-| created_at  | timestamp     | Timestamp pembuatan token (nullable)     |
+| Field      | Tipe Data     | Keterangan                             |
+|------------|---------------|-----------------------------------------|
+| email      | varchar(255)  | Email pengguna                          |
+| token      | varchar(255)  | Token reset password                    |
+| created_at | timestamp     | Waktu pembuatan token                   |
 
 ---
 
 ## 🔗 Relasi Antar Tabel
 
 ### One-to-One
-- `users` ➝ `mahasiswa`: satu pengguna hanya bisa menjadi satu mahasiswa
-- `users` ➝ `dosen`: satu pengguna hanya bisa menjadi satu dosen
+- `users` → `mahasiswa`  
+- `users` → `dosen`
 
 ### One-to-Many
-- `mahasiswa` ➝ `tugas_akhirs`: satu mahasiswa bisa punya banyak tugas akhir
-- `dosen` ➝ `tugas_akhirs`: satu dosen bisa membimbing banyak tugas akhir
-- `tugas_akhirs` ➝ `bimbingan`: satu tugas akhir memiliki banyak catatan bimbingan
+- `mahasiswa` → `tugas_akhirs`
+- `tugas_akhirs` → `bimbingans`
+- `dosen` → `bimbingans`
 
----
+### Many-to-Many
+- `dosen` ⇄ `tugas_akhirs` (pivot: `dosen_tugas_akhir`)

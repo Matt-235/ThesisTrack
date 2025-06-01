@@ -23,13 +23,19 @@
                     {{ session('success') }}
                 </div>
             @endif
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ session('error') }}
+                </div>
+            @endif
             <table id="tugasAkhirTable" class="table table-bordered table-hover">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Judul</th>
                         <th>Mahasiswa</th>
-                        <th>Dosen</th>
+                        <th>Dosen Pembimbing</th>
                         <th>Status</th>
                         <th>Catatan</th>
                         <th>Aksi</th>
@@ -41,7 +47,15 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $tugasAkhir->judul }}</td>
                             <td>{{ $tugasAkhir->mahasiswa->user->nama }}</td>
-                            <td>{{ $tugasAkhir->dosen ? $tugasAkhir->dosen->user->nama : '-' }}</td>
+                            <td>
+                                @if ($tugasAkhir->dosens->isNotEmpty())
+                                    @foreach ($tugasAkhir->dosens as $dosen)
+                                        {{ $dosen->user->nama }}<br>
+                                    @endforeach
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td>{{ ucfirst($tugasAkhir->status) }}</td>
                             <td>{{ $tugasAkhir->catatan ?? '-' }}</td>
                             <td>
@@ -54,7 +68,7 @@
                                         <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                     </form>
                                 @endif
-                                @if (Auth::user()->role === 'dosen' && $tugasAkhir->dosen_id === Auth::user()->dosen->id && $tugasAkhir->status === 'pending')
+                                @if (Auth::user()->role === 'dosen' && $tugasAkhir->dosens->contains('id', Auth::user()->dosen->id) && $tugasAkhir->status === 'pending')
                                     <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#approveModal{{ $tugasAkhir->id }}">Setujui</button>
                                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#rejectModal{{ $tugasAkhir->id }}">Tolak</button>
                                 @endif
@@ -83,7 +97,7 @@
                             <p>Apakah Anda yakin ingin menyetujui tugas akhir "<strong>{{ $tugasAkhir->judul }}</strong>"?</p>
                             <div class="form-group">
                                 <label for="catatan">Catatan (opsional)</label>
-                                <textarea name="catatan" id="catatan" class="form-control" rows="4">{{ old('catatan', $tugasAkhir->catatan) }}</textarea>
+                                <textarea name="catatan" id="catatan{{ $tugasAkhir->id }}" class="form-control" rows="4">{{ old('catatan', $tugasAkhir->catatan) }}</textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -112,8 +126,8 @@
                         <div class="modal-body">
                             <p>Apakah Anda yakin ingin menolak tugas akhir "<strong>{{ $tugasAkhir->judul }}</strong>"?</p>
                             <div class="form-group">
-                                <label for="catatan">Catatan (opsional)</label>
-                                <textarea name="catatan" id="catatan" class="form-control" rows="4">{{ old('catatan', $tugasAkhir->catatan) }}</textarea>
+                                <label for="catatan">Catatan (wajib)</label>
+                                <textarea name="catatan" id="catatan{{ $tugasAkhir->id }}" class="form-control" rows="4" required>{{ old('catatan', $tugasAkhir->catatan) }}</textarea>
                             </div>
                         </div>
                         <div class="modal-footer">

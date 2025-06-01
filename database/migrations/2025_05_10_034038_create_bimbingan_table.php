@@ -8,17 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('bimbingan', function (Blueprint $table) {
+        Schema::create('bimbingans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tugas_akhir_id')->constrained('tugas_akhirs')->onDelete('cascade');
-            $table->text('catatan');
+            $table->foreignId('mahasiswa_id')->constrained('mahasiswa')->onDelete('cascade');
+            $table->foreignId('dosen_id')->constrained('dosen')->onDelete('cascade');
             $table->date('tanggal');
+            $table->text('catatan');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('bimbingan');
+        Schema::dropIfExists('bimbingans');
     }
 };
